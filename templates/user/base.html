@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Default Title{% endblock %}</title>
+    <title>{% block title %}DINGDONG - Authorized Brand Store{% endblock %}</title>
 
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,12 +26,88 @@
         }
     </script>
 
+    <!-- Custom Styles -->
+    <style>
+        .line-clamp-2 {
+            display: -webkit-box;
+            -webkit-line-clamp: 2;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding-left: 1rem;
+                padding-right: 1rem;
+            }
+        }
+        
+        .carousel-slide.active {
+            z-index: 1;
+        }
+
+        {% block extra_css %}
+        {% endblock %}
+    </style>
+
     {% block extra_head %}
     {% endblock %}
 </head>
-<body class="{% block body_class %}{% endblock %}">
-    {% block content %}
-    {% endblock %}
+<body class="bg-gray-100 {% block body_class %}{% endblock %}">
+    {% if not hide_layout %}
+        <!-- Include Header -->
+        {% include 'shared/header.html' %}
+    {% endif %}
+    <!-- Messages -->
+    {% include 'shared/message.html' %}
+
+    <!-- Main Content -->
+    <main>
+        {% block content %}
+        {% endblock %}
+    </main>
+
+    {% if not hide_layout %}
+        <!-- Include Footer -->
+        {% include 'shared/footer.html' %}
+    {% endif %}
+    <!-- Base JavaScript -->
+    <script>
+        // Common JavaScript functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            // Wishlist functionality
+            document.querySelectorAll('.wishlist-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const icon = this.querySelector('i');
+                    icon.classList.toggle('far');
+                    icon.classList.toggle('fas');
+                    if (icon.classList.contains('fas')) {
+                        this.classList.add('text-red-500');
+                        this.classList.remove('text-gray-400');
+                    } else {
+                        this.classList.remove('text-red-500');
+                        this.classList.add('text-gray-400');
+                    }
+                });
+            });
+
+            // Add to cart functionality
+            document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+                btn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(0.95)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 150);
+                    console.log('Added to cart');
+                });
+            });
+        });
+
+        {% block extra_js %}
+        {% endblock %}
+    </script>
 
     {% block extra_scripts %}
     {% endblock %}

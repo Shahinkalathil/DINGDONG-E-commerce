@@ -1,0 +1,348 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block title %}DINGDONG - Authorized Brand Store{% endblock %}
+
+{% block extra_css %}
+/* Additional styles specific to index page */
+
+{% endblock %}
+
+{% block content %}
+<!-- Hero Banner Carousel -->
+<section class="container mx-auto px-4 py-6">
+  <div class="relative rounded-lg overflow-hidden bg-gray-900 h-[300px] md:h-[400px]">
+    <!-- Carousel Container -->
+    <div class="carousel-container relative w-full h-full">
+      <!-- Banner 1 -->
+      <div class="carousel-slide active absolute inset-0 transition-transform duration-500 ease-in-out">
+        <img src="{% static 'images/banners/cbb0c425-165b-4a73-9fab-3f0de210fb36.jpeg' %}" alt="CASIO Watches Banner 1" class="w-full h-full object-cover opacity-80">
+        
+      </div>
+      
+      <!-- Banner 2 -->
+      <div class="carousel-slide absolute inset-0 transition-transform duration-500 ease-in-out translate-x-full">
+        <img src="{% static 'images/banners/g-shock.png' %}" alt="G-SHOCK Banner 2" class="w-full h-full object-cover opacity-80">
+      </div>
+      
+      <!-- Banner 3 -->
+      <div class="carousel-slide absolute inset-0 transition-transform duration-500 ease-in-out translate-x-full">
+        <img src="{% static 'images/banner3.jpg' %}" alt="Vintage Collection Banner 3" class="w-full h-full object-cover opacity-80">
+        
+      </div>
+    </div>
+    
+    <!-- Navigation Arrows -->
+    <button class="carousel-prev absolute left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all">
+      <i class="fas fa-chevron-left"></i>
+    </button>
+    <button class="carousel-next absolute right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all">
+      <i class="fas fa-chevron-right"></i>
+    </button>
+    
+    <!-- Dots Indicator -->
+    <div class="absolute bottom-4 left-0 right-0 flex justify-center space-x-2">
+      <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" data-slide="0"></button>
+      <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" data-slide="1"></button>
+      <button class="carousel-dot w-3 h-3 rounded-full bg-white opacity-50 hover:opacity-100 transition-opacity" data-slide="2"></button>
+    </div>
+  </div>
+</section>
+
+<!-- First Product Row -->
+<section class="container mx-auto px-4 py-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+    {% for product in featured_products %}
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+      <div class="relative">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/product-placeholder.jpg' %}{% endif %}" alt="{{ product.name }}" class="w-full h-48 object-contain">
+        <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 group-hover:text-red-500 transition-colors duration-300" data-product-id="{{ product.id }}">
+          <i class="far fa-heart text-lg"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-xs font-bold uppercase line-clamp-2">{{ product.name }}</h3>
+        <p class="text-xs text-gray-600 mt-1 font-medium">{{ product.brand.name }}</p>
+        <div class="flex items-center mt-2">
+          <div class="flex text-yellow-400">
+            {% for i in "12345" %}
+              {% if forloop.counter <= product.average_rating %}
+                <i class="fas fa-star text-xs"></i>
+              {% else %}
+                <i class="far fa-star text-xs"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="text-xs text-gray-500 ml-1">({{ product.average_rating|floatformat:1 }})</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div>
+            <span class="font-bold">₹ {{ product.discounted_price|floatformat:2 }}</span>
+            {% if product.original_price != product.discounted_price %}
+              <span class="text-xs text-gray-500 line-through ml-2">₹{{ product.original_price|floatformat:2 }}</span>
+            {% endif %}
+          </div>
+          <button class="add-to-cart-btn bg-yellow-500 text-black p-2 rounded-full transition-all duration-300 hover:bg-yellow-600" data-product-id="{{ product.id }}">
+            <i class="fas fa-shopping-cart text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <!-- Placeholder cards if no products -->
+    {% for i in "1234" %}
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+      <div class="relative">
+        <img src="{% static 'images/product-placeholder.jpg' %}" alt="Product Name" class="w-full h-48 object-contain">
+        <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 group-hover:text-red-500 transition-colors duration-300">
+          <i class="far fa-heart text-lg"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-xs font-bold uppercase line-clamp-2">PRODUCT NAME HERE</h3>
+        <p class="text-xs text-gray-600 mt-1 font-medium">CASIO</p>
+        <div class="flex items-center mt-2">
+          <div class="flex text-yellow-400">
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+          </div>
+          <span class="text-xs text-gray-500 ml-1">(4.5)</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div>
+            <span class="font-bold">₹ 1,495.00</span>
+            <span class="text-xs text-gray-500 line-through ml-2">₹1,650.00</span>
+          </div>
+          <button class="add-to-cart-btn bg-yellow-500 text-black p-2 rounded-full transition-all duration-300 hover:bg-yellow-600">
+            <i class="fas fa-shopping-cart text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </div>
+  <div class="flex justify-center mt-6">
+    <a href="#" class="bg-yellow-500 text-black px-8 py-2 rounded-full font-medium hover:bg-yellow-600 transition-colors">SEE ALL</a>
+  </div>
+</section>
+
+<!-- Second Product Row -->
+<section class="container mx-auto px-4 py-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+    {% for product in popular_products %}
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+      <div class="relative">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/product-placeholder.jpg' %}{% endif %}" alt="{{ product.name }}" class="w-full h-48 object-contain">
+        <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 group-hover:text-red-500 transition-colors duration-300" data-product-id="{{ product.id }}">
+          <i class="far fa-heart text-lg"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-xs font-bold uppercase line-clamp-2">{{ product.name }}</h3>
+        <p class="text-xs text-gray-600 mt-1 font-medium">{{ product.brand.name }}</p>
+        <div class="flex items-center mt-2">
+          <div class="flex text-yellow-400">
+            {% for i in "12345" %}
+              {% if forloop.counter <= product.average_rating %}
+                <i class="fas fa-star text-xs"></i>
+              {% else %}
+                <i class="far fa-star text-xs"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="text-xs text-gray-500 ml-1">({{ product.average_rating|floatformat:1 }})</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div>
+            <span class="font-bold">₹ {{ product.discounted_price|floatformat:2 }}</span>
+            {% if product.original_price != product.discounted_price %}
+              <span class="text-xs text-gray-500 line-through ml-2">₹{{ product.original_price|floatformat:2 }}</span>
+            {% endif %}
+          </div>
+          <button class="add-to-cart-btn bg-yellow-500 text-black p-2 rounded-full transition-all duration-300 hover:bg-yellow-600" data-product-id="{{ product.id }}">
+            <i class="fas fa-shopping-cart text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <!-- Placeholder cards if no products -->
+    {% for i in "1234" %}
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+      <div class="relative">
+        <img src="{% static 'images/product-placeholder.jpg' %}" alt="Product Name" class="w-full h-48 object-contain">
+        <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 group-hover:text-red-500 transition-colors duration-300">
+          <i class="far fa-heart text-lg"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-xs font-bold uppercase line-clamp-2">PRODUCT NAME HERE</h3>
+        <p class="text-xs text-gray-600 mt-1 font-medium">CASIO</p>
+        <div class="flex items-center mt-2">
+          <div class="flex text-yellow-400">
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+          </div>
+          <span class="text-xs text-gray-500 ml-1">(4.5)</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div>
+            <span class="font-bold">₹ 1,495.00</span>
+            <span class="text-xs text-gray-500 line-through ml-2">₹1,650.00</span>
+          </div>
+          <button class="add-to-cart-btn bg-yellow-500 text-black p-2 rounded-full transition-all duration-300 hover:bg-yellow-600">
+            <i class="fas fa-shopping-cart text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </div>
+  <div class="flex justify-center mt-6">
+    <a href="#" class="bg-yellow-500 text-black px-8 py-2 rounded-full font-medium hover:bg-yellow-600 transition-colors">SEE ALL</a>
+  </div>
+</section>
+
+<!-- Third Product Row -->
+<section class="container mx-auto px-4 py-6">
+  <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 md:gap-6">
+    {% for product in latest_products %}
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+      <div class="relative">
+        <img src="{% if product.image %}{{ product.image.url }}{% else %}{% static 'images/product-placeholder.jpg' %}{% endif %}" alt="{{ product.name }}" class="w-full h-48 object-contain">
+        <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 group-hover:text-red-500 transition-colors duration-300" data-product-id="{{ product.id }}">
+          <i class="far fa-heart text-lg"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-xs font-bold uppercase line-clamp-2">{{ product.name }}</h3>
+        <p class="text-xs text-gray-600 mt-1 font-medium">{{ product.brand.name }}</p>
+        <div class="flex items-center mt-2">
+          <div class="flex text-yellow-400">
+            {% for i in "12345" %}
+              {% if forloop.counter <= product.average_rating %}
+                <i class="fas fa-star text-xs"></i>
+              {% else %}
+                <i class="far fa-star text-xs"></i>
+              {% endif %}
+            {% endfor %}
+          </div>
+          <span class="text-xs text-gray-500 ml-1">({{ product.average_rating|floatformat:1 }})</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div>
+            <span class="font-bold">₹ {{ product.discounted_price|floatformat:2 }}</span>
+            {% if product.original_price != product.discounted_price %}
+              <span class="text-xs text-gray-500 line-through ml-2">₹{{ product.original_price|floatformat:2 }}</span>
+            {% endif %}
+          </div>
+          <button class="add-to-cart-btn bg-yellow-500 text-black p-2 rounded-full transition-all duration-300 hover:bg-yellow-600" data-product-id="{{ product.id }}">
+            <i class="fas fa-shopping-cart text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <!-- Placeholder cards if no products -->
+    {% for i in "1234" %}
+    <div class="bg-white p-4 rounded-lg shadow hover:shadow-xl transition-all duration-300 transform hover:-translate-y-1 group">
+      <div class="relative">
+        <img src="{% static 'images/product-placeholder.jpg' %}" alt="Product Name" class="w-full h-48 object-contain">
+        <button class="wishlist-btn absolute top-2 right-2 text-gray-400 hover:text-red-500 group-hover:text-red-500 transition-colors duration-300">
+          <i class="far fa-heart text-lg"></i>
+        </button>
+      </div>
+      <div class="mt-4">
+        <h3 class="text-xs font-bold uppercase line-clamp-2">PRODUCT NAME HERE</h3>
+        <p class="text-xs text-gray-600 mt-1 font-medium">CASIO</p>
+        <div class="flex items-center mt-2">
+          <div class="flex text-yellow-400">
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+            <i class="fas fa-star text-xs"></i>
+          </div>
+          <span class="text-xs text-gray-500 ml-1">(4.5)</span>
+        </div>
+        <div class="mt-2 flex items-center justify-between">
+          <div>
+            <span class="font-bold">₹ 1,495.00</span>
+            <span class="text-xs text-gray-500 line-through ml-2">₹1,650.00</span>
+          </div>
+          <button class="add-to-cart-btn bg-yellow-500 text-black p-2 rounded-full transition-all duration-300 hover:bg-yellow-600">
+            <i class="fas fa-shopping-cart text-sm"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+    {% endfor %}
+  </div>
+  <div class="flex justify-center mt-6">
+    <a href="#" class="bg-yellow-500 text-black px-8 py-2 rounded-full font-medium hover:bg-yellow-600 transition-colors">SEE ALL</a>
+  </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+// Carousel functionality
+let currentSlide = 0;
+const slides = document.querySelectorAll('.carousel-slide');
+const dots = document.querySelectorAll('.carousel-dot');
+const totalSlides = slides.length;
+
+function showSlide(index) {
+  slides.forEach((slide, i) => {
+    slide.classList.remove('active');
+    if (i === index) {
+      slide.style.transform = 'translateX(0)';
+      slide.classList.add('active');
+    } else if (i < index) {
+      slide.style.transform = 'translateX(-100%)';
+    } else {
+      slide.style.transform = 'translateX(100%)';
+    }
+  });
+  
+  dots.forEach((dot, i) => {
+    dot.classList.toggle('opacity-100', i === index);
+    dot.classList.toggle('opacity-50', i !== index);
+  });
+}
+
+function nextSlide() {
+  currentSlide = (currentSlide + 1) % totalSlides;
+  showSlide(currentSlide);
+}
+
+function prevSlide() {
+  currentSlide = (currentSlide - 1 + totalSlides) % totalSlides;
+  showSlide(currentSlide);
+}
+
+// Event listeners
+document.querySelector('.carousel-next')?.addEventListener('click', nextSlide);
+document.querySelector('.carousel-prev')?.addEventListener('click', prevSlide);
+
+dots.forEach((dot, index) => {
+  dot.addEventListener('click', () => {
+    currentSlide = index;
+    showSlide(currentSlide);
+  });
+});
+
+// Auto-play carousel
+setInterval(nextSlide, 5000);
+
+// Initialize first slide
+showSlide(0);
+{% endblock %}

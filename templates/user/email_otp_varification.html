@@ -1,0 +1,291 @@
+{% extends 'user/base.html' %}
+
+{% block title %}OTP Verification - DINGDONG{% endblock %}
+
+{% block body_class %}bg-gray-100 min-h-screen flex items-center justify-center p-4{% endblock %}
+
+{% block content %}
+<!-- OTP Verification Container -->
+<div class="bg-gray-200 rounded-2xl p-8 w-full max-w-4xl shadow-lg">
+  <!-- DINGDONG Logo -->
+  <div class="text-center mb-8">
+    <h1 class="text-3xl font-bold text-black">DINGDONG</h1>
+  </div>
+  
+  <!-- Main Content Grid -->
+  <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center">
+    <!-- Left Side - OTP Form -->
+    <div class="order-2 lg:order-1">
+      <!-- OTP Verification Title -->
+      <h2 class="text-2xl lg:text-3xl font-bold text-black mb-4">OTP Verification</h2>
+      
+      <!-- Email Information -->
+      <p class="text-gray-700 mb-6 text-sm lg:text-base">
+        Enter the OTP sent to <span class="font-medium">{{ email|default:"your email" }}</span>
+      </p>
+      
+      <!-- OTP Input Form -->
+      <form id="otpForm" method="post" class="space-y-6">
+        {% csrf_token %}
+        <input type="hidden" name="email" value="{{ email }}">
+        
+        <!-- OTP Input Boxes -->
+        <div class="flex justify-center lg:justify-start space-x-2 lg:space-x-3">
+          <input type="text" name="otp_1" maxlength="1" class="otp-input w-12 h-12 lg:w-14 lg:h-14 text-center text-xl font-bold border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all" data-index="0">
+          <input type="text" name="otp_2" maxlength="1" class="otp-input w-12 h-12 lg:w-14 lg:h-14 text-center text-xl font-bold border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all" data-index="1">
+          <input type="text" name="otp_3" maxlength="1" class="otp-input w-12 h-12 lg:w-14 lg:h-14 text-center text-xl font-bold border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all" data-index="2">
+          <input type="text" name="otp_4" maxlength="1" class="otp-input w-12 h-12 lg:w-14 lg:h-14 text-center text-xl font-bold border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all" data-index="3">
+          <input type="text" name="otp_5" maxlength="1" class="otp-input w-12 h-12 lg:w-14 lg:h-14 text-center text-xl font-bold border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all" data-index="4">
+          <input type="text" name="otp_6" maxlength="1" class="otp-input w-12 h-12 lg:w-14 lg:h-14 text-center text-xl font-bold border-2 border-gray-400 rounded-lg focus:outline-none focus:ring-2 focus:ring-black focus:border-transparent transition-all" data-index="5">
+        </div>
+        
+        <!-- Hidden input for complete OTP -->
+        <input type="hidden" name="otp" id="complete_otp">
+        
+        <!-- Error Display -->
+        {% if form.non_field_errors %}
+          <div class="text-red-500 text-sm text-center">
+            {% for error in form.non_field_errors %}
+              <p>{{ error }}</p>
+            {% endfor %}
+          </div>
+        {% endif %}
+        
+        <!-- Timer and Resend -->
+        <div class="flex flex-row justify-between items-center">
+          <div class="text-sm text-gray-600">
+            Didn't receive the code? 
+            <button type="button" id="resendBtn" class="text-black font-medium hover:underline ml-1" disabled>
+              Re-send
+            </button>
+          </div>
+          <span class="text-gray-600 text-sm" id="timer">{{ timer_seconds|default:59 }}:00 sec</span>
+        </div>
+        
+        <!-- Submit Button -->
+        <div class="text-center lg:text-left">
+          <button 
+            type="submit" 
+            onclick="window.location.href='{% url 'reset_password' %}'"
+            class="w-full sm:w-auto bg-black text-white py-3 px-8 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2"
+          >
+            Submit
+          </button>
+        </div>
+        
+        <!-- Back Link -->
+        <div class="text-center lg:text-left">
+          <a href="{% url 'sign_in' %}" class="text-gray-600 hover:text-black transition-colors text-sm">
+            <i class="fas fa-arrow-left mr-2"></i>Back
+          </a>
+        </div>
+      </form>
+    </div>
+    
+    <!-- Right Side - Product Card -->
+    <div class="order-1 lg:order-2 flex justify-center">
+      <div class="bg-white rounded-2xl max-w-xs w-full overflow-hidden">
+        <img 
+          src=""
+          alt="CAT Watch" 
+          class="w-full h-full object-cover rounded-2xl"
+          onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMzAwIiBoZWlnaHQ9IjMwMCIgdmlld0JveD0iMCAwIDMwMCAzMDAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIzMDAiIGhlaWdodD0iMzAwIiBmaWxsPSIjRjNGNEY2Ii8+CjxjaXJjbGUgY3g9IjE1MCIgY3k9IjE1MCIgcj0iNDAiIGZpbGw9IiNCRUIyQzciLz4KPHN0cm9rZSBjeD0iMTUwIiBjeT0iMTUwIiByPSI2MCIgc3Ryb2tlPSIjOUNBM0FGIiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KPC9zdmc+'"
+        >
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Success/Error Messages -->
+{% if messages %}
+  <div class="fixed top-4 right-4 z-50">
+    {% for message in messages %}
+      <div class="alert alert-{{ message.tags }} bg-{% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %}-100 border border-{% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %}-400 text-{% if message.tags == 'success' %}green{% elif message.tags == 'error' %}red{% else %}blue{% endif %}-700 px-4 py-3 rounded mb-2" role="alert">
+        <span class="block sm:inline">{{ message }}</span>
+      </div>
+    {% endfor %}
+  </div>
+{% endif %}
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+  // OTP Input Functionality
+  const otpInputs = document.querySelectorAll('.otp-input');
+  const completeOtpInput = document.getElementById('complete_otp');
+  
+  // Function to update the hidden complete OTP input
+  function updateCompleteOtp() {
+    const otp = Array.from(otpInputs).map(input => input.value).join('');
+    completeOtpInput.value = otp;
+  }
+  
+  otpInputs.forEach((input, index) => {
+    input.addEventListener('input', (e) => {
+      const value = e.target.value;
+      
+      // Only allow numbers
+      if (!/^\d*$/.test(value)) {
+        e.target.value = '';
+        return;
+      }
+      
+      // Move to next input if current is filled
+      if (value && index < otpInputs.length - 1) {
+        otpInputs[index + 1].focus();
+      }
+      
+      // Update complete OTP
+      updateCompleteOtp();
+    });
+    
+    input.addEventListener('keydown', (e) => {
+      // Move to previous input on backspace
+      if (e.key === 'Backspace' && !e.target.value && index > 0) {
+        otpInputs[index - 1].focus();
+      }
+    });
+    
+    input.addEventListener('paste', (e) => {
+      e.preventDefault();
+      const pastedData = e.clipboardData.getData('text');
+      const digits = pastedData.replace(/\D/g, '').slice(0, 6);
+      
+      digits.split('').forEach((digit, i) => {
+        if (otpInputs[i]) {
+          otpInputs[i].value = digit;
+        }
+      });
+      
+      // Focus on the next empty input or the last one
+      const nextEmptyIndex = Math.min(digits.length, otpInputs.length - 1);
+      otpInputs[nextEmptyIndex].focus();
+      
+      // Update complete OTP
+      updateCompleteOtp();
+    });
+  });
+  
+  // Timer Functionality
+  let timeLeft = {{ timer_seconds|default:59 }};
+  const timerElement = document.getElementById('timer');
+  const resendBtn = document.getElementById('resendBtn');
+  
+  function updateTimer() {
+    const minutes = Math.floor(timeLeft / 60);
+    const seconds = timeLeft % 60;
+    timerElement.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')} sec`;
+    
+    if (timeLeft <= 0) {
+      resendBtn.disabled = false;
+      resendBtn.classList.remove('text-gray-400');
+      resendBtn.classList.add('text-black', 'hover:underline');
+      timerElement.textContent = '00:00 sec';
+      return;
+    }
+    
+    timeLeft--;
+    setTimeout(updateTimer, 1000);
+  }
+  
+  updateTimer();
+  
+  // Resend OTP
+  resendBtn.addEventListener('click', () => {
+    if (!resendBtn.disabled) {
+      // Make AJAX request to resend OTP
+      fetch( // put the email 
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+        },
+        body: JSON.stringify({
+          'email': '{{ email }}'
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        if (data.success) {
+          timeLeft = {{ timer_seconds|default:59 }};
+          resendBtn.disabled = true;
+          resendBtn.classList.add('text-gray-400');
+          resendBtn.classList.remove('text-black', 'hover:underline');
+          updateTimer();
+          
+          // Clear OTP inputs
+          otpInputs.forEach(input => input.value = '');
+          otpInputs[0].focus();
+          updateCompleteOtp();
+          
+          // Show success message
+          showMessage('OTP resent successfully!', 'success');
+        } else {
+          showMessage(data.message || 'Failed to resend OTP', 'error');
+        }
+      })
+      .catch(error => {
+        showMessage('Error occurred while resending OTP', 'error');
+      });
+    }
+  });
+  
+  // Form Submission
+  document.getElementById('otpForm').addEventListener('submit', (e) => {
+    const otp = Array.from(otpInputs).map(input => input.value).join('');
+    
+    if (otp.length !== 6) {
+      e.preventDefault();
+      showMessage('Please enter the complete 6-digit OTP', 'error');
+      return;
+    }
+    
+    // Show loading state
+    const submitBtn = document.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Verifying...';
+    submitBtn.disabled = true;
+    
+    // Re-enable button after form submission (in case of errors)
+    setTimeout(() => {
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    }, 5000);
+  });
+  
+  // Auto-focus first input on page load
+  window.addEventListener('load', () => {
+    otpInputs[0].focus();
+  });
+  
+  // Message display function
+  function showMessage(message, type) {
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `fixed top-4 right-4 z-50 alert alert-${type} bg-${type === 'success' ? 'green' : 'red'}-100 border border-${type === 'success' ? 'green' : 'red'}-400 text-${type === 'success' ? 'green' : 'red'}-700 px-4 py-3 rounded mb-2`;
+    messageDiv.innerHTML = `<span class="block sm:inline">${message}</span>`;
+    document.body.appendChild(messageDiv);
+    
+    // Auto-hide after 5 seconds
+    setTimeout(() => {
+      messageDiv.style.opacity = '0';
+      messageDiv.style.transition = 'opacity 0.5s';
+      setTimeout(() => {
+        messageDiv.remove();
+      }, 500);
+    }, 5000);
+  }
+  
+  // Auto-hide existing messages
+  setTimeout(function() {
+    const alerts = document.querySelectorAll('.alert');
+    alerts.forEach(function(alert) {
+      alert.style.opacity = '0';
+      alert.style.transition = 'opacity 0.5s';
+      setTimeout(function() {
+        alert.remove();
+      }, 500);
+    });
+  }, 5000);
+</script>
+{% endblock %}

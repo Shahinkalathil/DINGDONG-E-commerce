@@ -68,7 +68,7 @@
             Remember me
           </label>
         </div>
-        <a href="#" class="text-sm text-gray-600 hover:text-black transition-colors">
+        <a href="{% url 'email_otp_verification' %}" class="text-sm text-gray-600 hover:text-black transition-colors">
           Forget password ?
         </a>
       </div>
@@ -76,6 +76,7 @@
       <!-- Login Button -->
       <button 
         type="submit" 
+        onclick="window.location.href='{% url 'index' %}'"
         class="w-full bg-black text-white py-2.5 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 mt-2"
       >
         login
