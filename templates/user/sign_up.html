@@ -106,7 +106,7 @@
       </div>
       <button 
         type="submit" 
-        onclick="window.location.href='{% url 'otp_validation' %}'"
+        onclick="goToOtpValidation()">
         class="w-full bg-black text-white py-3 px-6 rounded-lg font-medium hover:bg-gray-800 transition-colors duration-300 focus:outline-none focus:ring-2 focus:ring-black focus:ring-offset-2 mt-4"
       >
         Register
@@ -124,6 +124,9 @@
 {% block extra_scripts %}
 <script>
   // Toggle password visibility
+  function goToOtpValidation() {
+    window.location.href = "{% url 'otp_validation' %}";
+  }
   function togglePassword(fieldId) {
     const passwordField = document.getElementById(fieldId);
     const eyeIcon = document.getElementById(fieldId + 'Eye');
